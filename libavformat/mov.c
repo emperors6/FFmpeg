@@ -699,8 +699,8 @@ static int mov_read_dref(MOVContext *c, AVIOContext *pb, MOVAtom atom)
                     avio_skip(pb, len);
             }
         } else {
-            av_log(c->fc, AV_LOG_DEBUG, "Unknown dref type 0x%08"PRIx32" size %"PRIu32"\n",
-                   dref->type, size);
+            av_log(c->fc, AV_LOG_DEBUG, "Unknown dref type 0x%08"PRIx32" size %"PRIu32" @ %ld\n",
+                   dref->type, size, avio_tell(pb));
             entries--;
             i--;
         }
@@ -6857,6 +6857,8 @@ static int mov_read_default(MOVContext *c, AVIOContext *pb, MOVAtom atom)
     }
     c->atom_depth ++;
 
+	  printf("%s:%d %d\n", __FILE__, __LINE__, c->fc->nb_streams);
+
     if (atom.size < 0)
         atom.size = INT64_MAX;
     while (total_size <= atom.size - 8 && !avio_feof(pb)) {
@@ -6928,6 +6930,7 @@ static int mov_read_default(MOVContext *c, AVIOContext *pb, MOVAtom atom)
         }
 
         if (!parse) { /* skip leaf atoms data */
+            printf("Unknown type: 0x%x %c%c%c%c size%ld\n", atom.type, (char)(atom.type >> 24), (char)(atom.type >> 16 & 0xff), (char)(atom.type >> 8 & 0xff), (char)(atom.type & 0xff), atom.size);
             avio_skip(pb, a.size);
         } else {
             int64_t start_pos = avio_tell(pb);
@@ -7461,6 +7464,8 @@ static int mov_read_header(AVFormatContext *s)
         return AVERROR(EINVAL);
     }
 
+	printf("%s:%d %d\n", __FILE__, __LINE__, s->nb_streams);
+
     mov->fc = s;
     mov->trak_index = -1;
     /* .mov and .mp4 aren't streamable anyway (only progressive download if moov is before mdat) */
@@ -7469,8 +7474,12 @@ static int mov_read_header(AVFormatContext *s)
     else
         atom.size = INT64_MAX;
 
+    printf("%s:%d %d\n", __FILE__, __LINE__, s->nb_streams);
+
     /* check MOV header */
     do {
+        printf("%s:%d %d\n", __FILE__, __LINE__, s->nb_streams);
+
         if (mov->moov_retry)
             avio_seek(pb, 0, SEEK_SET);
         if ((err = mov_read_default(mov, pb, atom)) < 0) {
@@ -7479,12 +7488,17 @@ static int mov_read_header(AVFormatContext *s)
             return err;
         }
     } while ((pb->seekable & AVIO_SEEKABLE_NORMAL) && !mov->found_moov && !mov->moov_retry++);
+
+    printf("%s:%d %d\n", __FILE__, __LINE__, s->nb_streams);
+
     if (!mov->found_moov) {
         av_log(s, AV_LOG_ERROR, "moov atom not found\n");
         mov_read_close(s);
         return AVERROR_INVALIDDATA;
     }
     av_log(mov->fc, AV_LOG_TRACE, "on_parse_exit_offset=%"PRId64"\n", avio_tell(pb));
+
+    printf("%s:%d %d\n", __FILE__, __LINE__, s->nb_streams);
 
     if (pb->seekable & AVIO_SEEKABLE_NORMAL) {
         if (mov->nb_chapter_tracks > 0 && !mov->ignore_chapters)

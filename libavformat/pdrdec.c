@@ -27,9 +27,9 @@
 #include "libavutil/intreadwrite.h"
 
 
-AVInputFormat ff_srt_demuxer = {
+AVInputFormat ff_pdr_demuxer = {
     .name        = "pdr",
-    .long_name   = NULL_IF_CONFIG_SMALL("Marlin PDR"),
+    .long_name   = NULL_IF_CONFIG_SMALL("Marlin PDR decformat"),
     .priv_data_size = 0,
     .read_probe  = 0,
     .read_header = 0,

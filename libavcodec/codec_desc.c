@@ -3088,6 +3088,12 @@ static const AVCodecDescriptor codec_descriptors[] = {
         .props     = AV_CODEC_PROP_TEXT_SUB,
     },
     {
+        .id        = AV_CODEC_ID_PDR,
+        .type      = AVMEDIA_TYPE_DATA,
+        .name      = "pdr",
+        .long_name = NULL_IF_CONFIG_SMALL("Marlin PDR DESC"),
+    },
+    {
         .id        = AV_CODEC_ID_MICRODVD,
         .type      = AVMEDIA_TYPE_SUBTITLE,
         .name      = "microdvd",

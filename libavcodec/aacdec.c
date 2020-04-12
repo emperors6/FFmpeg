@@ -549,7 +549,7 @@ static av_cold int latm_decode_init(AVCodecContext *avctx)
 }
 
 AVCodec ff_aac_decoder = {
-    .name            = "aac",
+    .name            = "aac2",
     .long_name       = NULL_IF_CONFIG_SMALL("AAC (Advanced Audio Coding)"),
     .type            = AVMEDIA_TYPE_AUDIO,
     .id              = AV_CODEC_ID_AAC,

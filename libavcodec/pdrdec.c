@@ -40,8 +40,8 @@ static int pdr_decode_frame(AVCodecContext *avctx, void *data,
 }
 AVCodec ff_pdr_decoder = {
     .name         = "pdr",
-    .long_name    = NULL_IF_CONFIG_SMALL("Marlin PDR"),
-    .type         = AVMEDIA_TYPE_SUBTITLE,
+    .long_name    = NULL_IF_CONFIG_SMALL("Marlin PDR avcodec"),
+    .type         = AVMEDIA_TYPE_DATA,
     .id           = AV_CODEC_ID_PDR,
     .init         = pdr_decode_init,
     .decode       = pdr_decode_frame,

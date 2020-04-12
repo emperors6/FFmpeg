@@ -392,6 +392,7 @@ extern AVInputFormat  ff_spdif_demuxer;
 extern AVOutputFormat ff_spdif_muxer;
 extern AVInputFormat  ff_srt_demuxer;
 extern AVOutputFormat ff_srt_muxer;
+extern AVInputFormat  ff_pdr_demuxer;
 extern AVInputFormat  ff_str_demuxer;
 extern AVInputFormat  ff_stl_demuxer;
 extern AVOutputFormat ff_streamhash_muxer;

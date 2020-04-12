@@ -2855,11 +2855,27 @@ static int open_input_file(InputFile *ifile, const char *filename,
         av_dict_set(&format_opts, "scan_all_pmts", "1", AV_DICT_DONT_OVERWRITE);
         scan_all_pmts_set = 1;
     }
+    printf("LIST%d: ", __LINE__);
+    for (i = 0; i < fmt_ctx->nb_streams; i++) {
+        AVStream *stream = fmt_ctx->streams[i];
+	      printf("s%d c%d, ", stream->index, stream->codecpar->codec_id);
+    }
+    printf("\n");
+
+
     if ((err = avformat_open_input(&fmt_ctx, filename,
                                    iformat, &format_opts)) < 0) {
         print_error(filename, err);
         return err;
     }
+    printf("LIST%d: ", __LINE__);
+    for (i = 0; i < fmt_ctx->nb_streams; i++) {
+        AVStream *stream = fmt_ctx->streams[i];
+	      printf("s%d c%d, ", stream->index, stream->codecpar->codec_id);
+    }
+    printf("\n");
+
+
     if (print_filename) {
         av_freep(&fmt_ctx->url);
         fmt_ctx->url = av_strdup(print_filename);
@@ -2872,9 +2888,19 @@ static int open_input_file(InputFile *ifile, const char *filename,
         return AVERROR_OPTION_NOT_FOUND;
     }
 
+    printf("LIST%d: ", __LINE__);
+    for (i = 0; i < fmt_ctx->nb_streams; i++) {
+        AVStream *stream = fmt_ctx->streams[i];
+	      printf("s%d c%d, ", stream->index, stream->codecpar->codec_id);
+    }
+    printf("\n");
+
+
     if (find_stream_info) {
+	    printf("A\n");
         AVDictionary **opts = setup_find_stream_info_opts(fmt_ctx, codec_opts);
         int orig_nb_streams = fmt_ctx->nb_streams;
+	    printf("B\n");
 
         err = avformat_find_stream_info(fmt_ctx, opts);
 
@@ -2888,13 +2914,22 @@ static int open_input_file(InputFile *ifile, const char *filename,
         }
     }
 
+	    printf("C\n");
     av_dump_format(fmt_ctx, 0, filename, 0);
+	    printf("D\n");
 
     ifile->streams = av_mallocz_array(fmt_ctx->nb_streams,
                                       sizeof(*ifile->streams));
     if (!ifile->streams)
         exit(1);
     ifile->nb_streams = fmt_ctx->nb_streams;
+
+    printf("LIST%d: ", __LINE__);
+    for (i = 0; i < fmt_ctx->nb_streams; i++) {
+        AVStream *stream = fmt_ctx->streams[i];
+	      printf("s%d c%d %0x %d %d, ", stream->index, stream->codecpar->codec_id, stream->codecpar->codec_tag, stream->codecpar->format, stream->codecpar->codec_type);
+    }
+    printf("\n");
 
     /* bind a decoder to each input stream */
     for (i = 0; i < fmt_ctx->nb_streams; i++) {
@@ -2917,7 +2952,11 @@ static int open_input_file(InputFile *ifile, const char *filename,
                     "Unsupported codec with id %d for input stream %d\n",
                     stream->codecpar->codec_id, stream->index);
             continue;
-        }
+        } else {
+            av_log(NULL, AV_LOG_INFO,
+                    "Supported codec with id %d for input stream %d\n",
+                    stream->codecpar->codec_id, stream->index);
+	}
         {
             AVDictionary *opts = filter_codec_opts(codec_opts, stream->codecpar->codec_id,
                                                    fmt_ctx, stream, codec);

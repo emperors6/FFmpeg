@@ -1217,9 +1217,10 @@ void avcodec_string(char *buf, int buf_size, AVCodecContext *enc, int encode)
         return;
     codec_type = av_get_media_type_string(enc->codec_type);
     codec_name = avcodec_get_name(enc->codec_id);
+    printf("NAME FOR CODEC 0x%x IS '%s'\n", enc->codec_id, codec_name);
     profile = avcodec_profile_name(enc->codec_id, enc->profile);
 
-    snprintf(buf, buf_size, "%s: %s", codec_type ? codec_type : "unknown",
+    snprintf(buf, buf_size, "%s: codecname'%s'", codec_type ? codec_type : "unknown",
              codec_name);
     buf[0] ^= 'a' ^ 'A'; /* first letter in uppercase */
 

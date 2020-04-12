@@ -506,7 +506,6 @@ static int update_stream_avctx(AVFormatContext *s)
     int i, ret;
     for (i = 0; i < s->nb_streams; i++) {
         AVStream *st = s->streams[i];
-
         if (!st->internal->need_context_update)
             continue;
 
@@ -598,7 +597,9 @@ FF_ENABLE_DEPRECATION_WARNINGS
         goto fail;
     }
 
+
     avio_skip(s->pb, s->skip_initial_bytes);
+    printf("format name: '%s'\n", s->iformat->name);
 
     /* Check filename in case an image number is expected. */
     if (s->iformat->flags & AVFMT_NEEDNUMBER) {
@@ -628,10 +629,12 @@ FF_ENABLE_DEPRECATION_WARNINGS
     if (s->pb)
         ff_id3v2_read_dict(s->pb, &s->internal->id3v2_meta, ID3v2_DEFAULT_MAGIC, &id3v2_extra_meta);
 
+    printf("format name: '%s'\n", s->iformat->name);
 
     if (!(s->flags&AVFMT_FLAG_PRIV_OPT) && s->iformat->read_header)
         if ((ret = s->iformat->read_header(s)) < 0)
             goto fail;
+printf("format name: '%s'\n", s->iformat->name);
 
     if (!s->metadata) {
         s->metadata = s->internal->id3v2_meta;

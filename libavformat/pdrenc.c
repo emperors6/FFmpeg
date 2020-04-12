@@ -26,7 +26,7 @@
 
 AVOutputFormat ff_pdr_muxer = {
     .name           = "pdr",
-    .long_name      = NULL_IF_CONFIG_SMALL("Marlin PDR"),
+    .long_name      = NULL_IF_CONFIG_SMALL("Marlin PDR encformat"),
     .mime_type      = "application/x-marlin-pdr",
     .extensions     = "pds",
     .priv_data_size = 0, 
